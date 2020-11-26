@@ -51,7 +51,7 @@ namespace Alura.ListaLeitura.App
         private Task ExibeFormulario(HttpContext context)
         {
             var html = CarregaArquivoHTML("formulario");
-                return context.Response.WriteAsync(html);
+            return context.Response.WriteAsync(html);
         }
 
         private string CarregaArquivoHTML(string nomeArquivo)
@@ -61,7 +61,7 @@ namespace Alura.ListaLeitura.App
             {
                 return arquivo.ReadToEnd();
             }
-            
+
         }
 
         public Task ExibeDetalhes(HttpContext context)
@@ -107,7 +107,17 @@ namespace Alura.ListaLeitura.App
         public Task LivrosParaLer(HttpContext context)
         {
             var _repo = new LivroRepositorioCSV();
-            return context.Response.WriteAsync(_repo.ParaLer.ToString());
+            var conteudoArquivo = CarregaArquivoHTML("para-ler");
+
+            foreach (var livro in _repo.ParaLer.Livros)
+            {
+                conteudoArquivo = conteudoArquivo
+                    .Replace("#NOVO-ITEM#", $"<li>{livro.Titulo} - {livro.Autor}</li>#NOVO-ITEM#");
+            }
+            conteudoArquivo = conteudoArquivo.Replace("#NOVO-ITEM#", "");
+
+
+            return context.Response.WriteAsync(conteudoArquivo);
         }
 
         public Task LivrosLendo(HttpContext context)
