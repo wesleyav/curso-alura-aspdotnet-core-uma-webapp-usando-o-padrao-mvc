@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Alura.ListaLeitura.App
@@ -12,7 +13,25 @@ namespace Alura.ListaLeitura.App
     {
         public void Configure(IApplicationBuilder app)
         {
-            app.Run(LivrosParaLer);
+            app.Run(Roteamento);
+        }
+
+        public Task Roteamento(HttpContext context)
+        {
+            var _repo = new LivroRepositorioCSV();
+            var caminhosAtendidos = new Dictionary<string, string>
+            {
+                {"/Livros/ParaLer", _repo.ParaLer.ToString() },
+                {"/Livros/Lendo", _repo.Lendo.ToString() },
+                {"/Livros/Lidos", _repo.Lidos.ToString() }
+            };
+
+            if (caminhosAtendidos.ContainsKey(context.Request.Path))
+            {
+                return context.Response.WriteAsync(caminhosAtendidos[context.Request.Path]);
+            }
+
+            return context.Response.WriteAsync("Caminho inexistente");
         }
 
         public Task LivrosParaLer(HttpContext context)
