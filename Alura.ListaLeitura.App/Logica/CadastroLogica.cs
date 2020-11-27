@@ -16,34 +16,17 @@ namespace Alura.ListaLeitura.App.Logica
     {
         
 
-        public static Task Incluir(HttpContext context)
-        {
-            var livro = new Livro()
-            {
-                Titulo = context.Request.Form["titulo"].First(),
-                Autor = context.Request.Form["autor"].First(),
-            };
+        public string Incluir(Livro livro)
+        {            
             var repo = new LivroRepositorioCSV();
             repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso!");
+            return "O livro foi adicionado com sucesso!";
         }
 
         public static Task ExibeFormulario(HttpContext context)
         {
             var html = HtmlUtils.CarregaArquivoHTML("formulario");
             return context.Response.WriteAsync(html);
-        }
-
-        public static Task NovoLivro(HttpContext context)
-        {
-            var livro = new Livro()
-            {
-                Titulo = Convert.ToString(context.GetRouteValue("nome")),
-                Autor = Convert.ToString(context.GetRouteValue("autor")),
-            };
-            var repo = new LivroRepositorioCSV();
-            repo.Incluir(livro);
-            return context.Response.WriteAsync("O livro foi adicionado com sucesso!");
-        }
+        }        
     }
 }

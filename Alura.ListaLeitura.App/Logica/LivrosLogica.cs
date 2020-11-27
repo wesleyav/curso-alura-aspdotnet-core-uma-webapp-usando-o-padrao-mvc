@@ -41,12 +41,11 @@ namespace Alura.ListaLeitura.App.Logica
             return context.Response.WriteAsync(_repo.Lidos.ToString());
         }
 
-        public static Task Detalhes(HttpContext context)
-        {
-            int id = Convert.ToInt32(context.GetRouteValue("id"));
+        public string Detalhes(int id)
+        {            
             var repo = new LivroRepositorioCSV();
             var livro = repo.Todos.First(l => l.Id == id);
-            return context.Response.WriteAsync(livro.Detalhes());
+            return livro.Detalhes();
         }
 
         public string Teste()
